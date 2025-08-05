@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +23,9 @@ public class Product {
 
     @Column(name = "inventory")
     private Integer inventory;
+
+    @Column(name = "price")
+    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")

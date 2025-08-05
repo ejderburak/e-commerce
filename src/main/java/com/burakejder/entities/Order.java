@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,18 +24,14 @@ public class Order {
     @Column(name = "order_date")
     private Date orderDate;
 
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
+
+    @Column(name = "quantity")
+    private Integer quantity;
+
     @ManyToOne
-    @JoinColumn(name = "user_ıd")
+    @JoinColumn(name = "user_id")
     private User user;
-
-    @ManyToMany
-    @JoinTable(
-            name = "order_item",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private List<Product> products = new ArrayList<Product>();
-
-
 
 }

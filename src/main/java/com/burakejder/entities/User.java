@@ -35,8 +35,9 @@ public class User {
     @Column(name = "phone_number",unique = true, nullable = false)
     private String phoneNumber;
 
-//    @Column(name = "password", nullable = false)
-//    private String password;
+
+    @Column(name = "password", nullable = false)
+    private String password;
 
 
 
