@@ -1,9 +1,14 @@
 package com.burakejder.DTO;
 
-import com.burakejder.entities.Category;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DtoProduct {
 
     private Long productId;
