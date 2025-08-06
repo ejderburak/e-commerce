@@ -19,7 +19,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer orderId;
+    private Long orderId;
 
     @Column(name = "order_date")
     private Date orderDate;
