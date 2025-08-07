@@ -1,5 +1,6 @@
 package com.burakejder.controller;
 
+import com.burakejder.DTO.DtoProduct;
 import com.burakejder.entities.Product;
 import com.burakejder.service.ProductService;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @GetMapping(path = "/{id}")
-    public Optional<Product> findById(@PathVariable Long id) {
+    public DtoProduct findById(@PathVariable Long id) {
         return productService.findById(id);
     }
 
@@ -33,8 +34,6 @@ public class ProductController {
     public void save(@RequestBody Product product) {
          productService.addProduct(product);
     }
-
-
 
 }
 
