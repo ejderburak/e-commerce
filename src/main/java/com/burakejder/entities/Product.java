@@ -19,7 +19,7 @@ public class Product {
     private Long productId;
 
     @Column(name= "product_name")
-    private String ProductName;
+    private String productName;
 
     @Column(name = "inventory")
     private Integer inventory;
