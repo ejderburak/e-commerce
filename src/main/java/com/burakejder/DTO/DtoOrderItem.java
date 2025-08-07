@@ -1,5 +1,6 @@
 package com.burakejder.DTO;
 
+import com.burakejder.entities.Product;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,8 @@ import java.math.BigDecimal;
 public class DtoOrderItem {
 
     private Long orderItemId;
-    private  DtoOrder order;
-    private DtoProduct product;
+    private  Long orderId;
+    private Product productId;
     private Integer quantity;
     private BigDecimal price;
 }
