@@ -1,6 +1,7 @@
 package com.burakejder.service;
 
 import com.burakejder.DTO.DtoProduct;
+import com.burakejder.DTO.DtoStockUpdate;
 import com.burakejder.entities.Category;
 import com.burakejder.entities.Product;
 import com.burakejder.mapper.DtoMapper;
@@ -56,4 +57,70 @@ public class ProductService {
 
         return DtoMapper.toDto(savedProduct);
     }
+
+    // updating the product
+    public DtoProduct updateProduct(Long id, DtoProduct dtoProduct){
+
+        Optional<Product> optional = productRepository.findById(id);
+        if(optional.isEmpty()){ return null; }
+
+        Product product = optional.get();
+
+        if (dtoProduct.getProductName() != null) {
+            product.setProductName(dtoProduct.getProductName());
+        }
+        if (dtoProduct.getInventory() != null) {
+            product.setInventory(dtoProduct.getInventory());
+        }
+        if (dtoProduct.getPrice() != null) {
+            product.setPrice(dtoProduct.getPrice());
+        }
+
+        Long categoryId = dtoProduct.getCategory().getCategoryId();
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+
+        product.setProductCategory(optionalCategory.get());
+
+        Product savedProduct = productRepository.save(product);
+        return DtoMapper.toDto(savedProduct);
+
+    }
+
+    // DELETE /api/v1/products/{id} - Ürün sil
+    public boolean deleteProduct(Long id) {
+        boolean exists = productRepository.existsById(id);
+        if (!exists) {
+            return false;
+        }
+        productRepository.deleteById(id);
+        return true;
+    }
+
+    // GET /api/v1/products/category/{category} - Kategoriye göre ürünleri listele
+    public List<DtoProduct> findByCategory(String categoryName) {
+        List<Product> products = productRepository.findBtProductCategory_CategoryName(categoryName);
+        List<DtoProduct> result = new ArrayList<>();
+        for (Product p : products) {
+            result.add(DtoMapper.toDto(p));
+        }
+        return result;
+    }
+
+    // PATCH /api/v1/products/{id}/stock - Stok güncelle
+    public DtoProduct updateStock(Long id, DtoStockUpdate stockUpdate) {
+        if (stockUpdate == null || stockUpdate.getInventory() == null) {
+            throw new IllegalArgumentException("inventory is required.");
+        }
+
+        Optional<Product> optional = productRepository.findById(id);
+        if (!optional.isPresent()) {
+            throw new IllegalArgumentException("Product not found with id: " + id);
+        }
+
+        Product product = optional.get();
+        product.setInventory(stockUpdate.getInventory());
+        Product saved = productRepository.save(product);
+        return DtoMapper.toDto(saved);
+    }
 }
+
