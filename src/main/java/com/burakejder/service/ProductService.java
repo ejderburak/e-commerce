@@ -4,6 +4,7 @@ import com.burakejder.DTO.DtoProduct;
 import com.burakejder.entities.Category;
 import com.burakejder.entities.Product;
 import com.burakejder.mapper.DtoMapper;
+import com.burakejder.repository.CategoryRepository;
 import com.burakejder.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<DtoProduct> findAll() {
 
@@ -43,15 +45,15 @@ public class ProductService {
 
     public DtoProduct addProduct(DtoProduct dtoProduct){
 
-        //first convert dto ->  entity
+        Long categoryId = dtoProduct.getCategory().getCategoryId();
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+
+        Category dbCategory = optionalCategory.get();
         Product product = DtoMapper.toEntity(dtoProduct);
 
-        // saving to db
-        Product dbProduct = productRepository.save(product);
+        product.setProductCategory(dbCategory);
+        Product savedProduct = productRepository.save(product);
 
-        // returning the saved proudct to dto
-        return DtoMapper.toDto(dbProduct);
-
-
+        return DtoMapper.toDto(savedProduct);
     }
 }

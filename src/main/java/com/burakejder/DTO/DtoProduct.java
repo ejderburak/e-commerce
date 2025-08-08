@@ -1,5 +1,6 @@
 package com.burakejder.DTO;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ public class DtoProduct {
     private String productName;
     private Integer inventory;
     private BigDecimal price;
+
+    @NotNull(message = "category is required")
     private DtoCategory category;
 
 }

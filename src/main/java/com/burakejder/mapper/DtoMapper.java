@@ -87,6 +87,7 @@ public class DtoMapper {
     // dtoOrder -> order
     public static Order toEntity(DtoOrder dto){
         if(dto == null){ return null; }
+
         Order entity = new Order();
         BeanUtils.copyProperties(dto, entity);
         entity.setUser(toEntity(dto.getUser()));
@@ -99,11 +100,23 @@ public class DtoMapper {
 
         DtoOrderItem dto = new DtoOrderItem();
         dto.setOrderItemId(entity.getOrderItemId());
-        dto.setOrderId(entity.getOrderItemId());
-        dto.setProductId(entity.getProductId());
+        dto.setOrder(toDto(entity.getOrderId()));
+        dto.setProduct(toDto(entity.getProductId()));
         dto.setQuantity(entity.getQuantity());
         dto.setPrice(entity.getPrice());
         return dto;
+    }
+
+    public static OrderItem toEntity(DtoOrderItem dto){
+        if (dto == null){ return null; }
+        OrderItem entity = new OrderItem();
+        entity.setOrderItemId(dto.getOrderItemId());
+        entity.setOrderId(toEntity(dto.getOrder()));
+        entity.setProductId(toEntity(dto.getProduct()));
+        entity.setQuantity(dto.getQuantity());
+        entity.setPrice(dto.getPrice());
+
+        return entity;
     }
 
 }
