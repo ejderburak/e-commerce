@@ -82,11 +82,12 @@ public class ProductService {
         product.setProductCategory(optionalCategory.get());
 
         Product savedProduct = productRepository.save(product);
-        return DtoMapper.toDto(savedProduct);
+
+        return  DtoMapper.toDto(savedProduct);
 
     }
 
-    // DELETE /api/v1/products/{id} - Ürün sil
+    // deleting a product
     public boolean deleteProduct(Long id) {
         boolean exists = productRepository.existsById(id);
         if (!exists) {
@@ -96,9 +97,8 @@ public class ProductService {
         return true;
     }
 
-    // GET /api/v1/products/category/{category} - Kategoriye göre ürünleri listele
     public List<DtoProduct> findByCategory(String categoryName) {
-        List<Product> products = productRepository.findBtProductCategory_CategoryName(categoryName);
+        List<Product> products = productRepository.findByProductCategory_CategoryName(categoryName);
         List<DtoProduct> result = new ArrayList<>();
         for (Product p : products) {
             result.add(DtoMapper.toDto(p));
@@ -106,14 +106,11 @@ public class ProductService {
         return result;
     }
 
-    // PATCH /api/v1/products/{id}/stock - Stok güncelle
     public DtoProduct updateStock(Long id, DtoStockUpdate stockUpdate) {
-        if (stockUpdate == null || stockUpdate.getInventory() == null) {
-            throw new IllegalArgumentException("inventory is required.");
-        }
 
         Optional<Product> optional = productRepository.findById(id);
-        if (!optional.isPresent()) {
+
+        if (optional.isEmpty()) {
             throw new IllegalArgumentException("Product not found with id: " + id);
         }
 

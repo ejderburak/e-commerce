@@ -22,8 +22,7 @@ public class DtoMapper {
         if(dto == null){ return null; }
 
         Category entity = new Category();
-        entity.setCategoryId(dto.getCategoryId());
-        entity.setCategoryName(dto.getCategoryName());
+        BeanUtils.copyProperties(dto, entity);
         return entity;
     }
 
@@ -33,10 +32,7 @@ public class DtoMapper {
         if(entity == null){ return null; }
 
         DtoProduct dto = new DtoProduct();
-        dto.setProductId(entity.getProductId());
-        dto.setProductName(entity.getProductName());
-        dto.setInventory(entity.getInventory());
-        dto.setPrice(entity.getPrice());
+        BeanUtils.copyProperties(entity, dto);
         dto.setCategory(toDto(entity.getProductCategory()));
 
         return dto;
@@ -47,10 +43,7 @@ public class DtoMapper {
         if(dto == null){ return null; }
 
         Product entity = new Product();
-        entity.setProductId(dto.getProductId());
-        entity.setProductName(dto.getProductName());
-        entity.setInventory(dto.getInventory());
-        entity.setPrice(dto.getPrice());
+        BeanUtils.copyProperties(dto, entity);
         entity.setProductCategory(toEntity(dto.getCategory()));
         return entity;
     }
@@ -96,25 +89,28 @@ public class DtoMapper {
 
     // orderItem -> dtoOrderItem
     public static DtoOrderItem toDto(OrderItem entity){
-        if(entity == null){ return null; }
+        if(entity == null){
+            return null;
+        }
 
         DtoOrderItem dto = new DtoOrderItem();
-        dto.setOrderItemId(entity.getOrderItemId());
+        BeanUtils.copyProperties(entity, dto);
+
         dto.setOrder(toDto(entity.getOrderId()));
         dto.setProduct(toDto(entity.getProductId()));
-        dto.setQuantity(entity.getQuantity());
-        dto.setPrice(entity.getPrice());
+
         return dto;
     }
 
     public static OrderItem toEntity(DtoOrderItem dto){
         if (dto == null){ return null; }
         OrderItem entity = new OrderItem();
-        entity.setOrderItemId(dto.getOrderItemId());
+
+        BeanUtils.copyProperties(dto, entity);
+
+        // fields that can not be copied
         entity.setOrderId(toEntity(dto.getOrder()));
         entity.setProductId(toEntity(dto.getProduct()));
-        entity.setQuantity(dto.getQuantity());
-        entity.setPrice(dto.getPrice());
 
         return entity;
     }

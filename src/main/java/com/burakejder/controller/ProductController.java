@@ -33,7 +33,6 @@ public class ProductController {
         return productService.findById(id);
     }
 
-
     @PostMapping
     public DtoProduct addProduct(@Valid @RequestBody DtoProduct dtoProduct){
         return productService.addProduct(dtoProduct);
@@ -44,19 +43,16 @@ public class ProductController {
         return productService.updateProduct(id, dtoProduct);
     }
 
-    // DELETE  /api/v1/products/{id} - Ürün sil
     @DeleteMapping("/{id}")
     public boolean deleteProduct(@PathVariable Long id) {
         return productService.deleteProduct(id);
     }
 
-    // GET     /api/v1/products/category/{category} - Kategoriye göre ürünleri listele
     @GetMapping("/category/{category}")
     public List<DtoProduct> findByCategory(@PathVariable("category") String categoryName) {
         return productService.findByCategory(categoryName);
     }
 
-    // PATCH   /api/v1/products/{id}/stock - Stok güncelle
     @PatchMapping("/{id}/stock")
     public DtoProduct updateStock(@PathVariable Long id, @RequestBody DtoStockUpdate stockUpdate) {
         return productService.updateStock(id, stockUpdate);
