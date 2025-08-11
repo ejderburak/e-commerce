@@ -18,13 +18,13 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    // POST - /api/v1/orders - lists all the orders
+    // POST - /api/v1/orders - creating orders
     @PostMapping
     public DtoOrder createOrder(@RequestBody DtoOrder dtoOrder){
         return orderService.createOrder(dtoOrder);
     }
 
-    //GET - /api/v1/orders/{id} - get product by id
+    //GET - /api/v1/orders/{id} - get order by id
     @GetMapping("/{id}")
     public DtoOrder findById(@PathVariable Long id){
         return orderService.getOrderById(id);
