@@ -17,4 +17,5 @@ public class DtoOrder {
     private BigDecimal totalPrice;
     private Integer quantity;
     private DtoUser user;
+    private String status;
 }
