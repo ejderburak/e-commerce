@@ -4,6 +4,9 @@ import com.burakejder.DTO.*;
 import com.burakejder.entities.*;
 import org.springframework.beans.BeanUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // service katmanında dtoları kullanırken her defasında uzun uzun yazmak yerine hali hazırda bir mapper class
 public class DtoMapper {
 
@@ -74,6 +77,14 @@ public class DtoMapper {
         BeanUtils.copyProperties(entity, dto);
         dto.setUser(toDto(entity.getUser()));
 
+        // mapping orderitem
+        if(entity.getOrderItems() != null){
+            List<DtoOrderItem> items = new ArrayList<>();
+            for(OrderItem item : entity.getOrderItems()){
+                items.add(toDto(item));
+            }
+            dto.setOrderItems(items);
+        }
         return dto;
     }
 
@@ -84,21 +95,49 @@ public class DtoMapper {
         Order entity = new Order();
         BeanUtils.copyProperties(dto, entity);
         entity.setUser(toEntity(dto.getUser()));
+
+        if(dto.getOrderItems() != null){
+            List<OrderItem> items = new ArrayList<>();
+            for(DtoOrderItem item : dto.getOrderItems()){
+                OrderItem orderEntity  = toEntity(item);
+                orderEntity.setOrderId(entity);
+                items.add(orderEntity);
+            }
+            entity.setOrderItems(items);
+        }
         return entity;
     }
 
     // orderItem -> dtoOrderItem
-    public static DtoOrderItem toDto(OrderItem entity){
-        if(entity == null){
-            return null;
-        }
+//    public static DtoOrderItem toDto(OrderItem entity) {
+//        if (entity == null) return null;
+//        DtoOrderItem dto = new DtoOrderItem();
+//        dto.setOrderItemId(entity.getOrderItemId());
+//        dto.setProduct(DtoMapper.toDto(entity.getProductId()));
+//        dto.setQuantity(entity.getQuantity());
+//        dto.setPrice(entity.getPrice());
+//        return dto;
+//    }
+    public static DtoOrderItem toDto(OrderItem entity) {
 
+        if (entity == null) return null;
         DtoOrderItem dto = new DtoOrderItem();
-        BeanUtils.copyProperties(entity, dto);
+        dto.setOrderItemId(entity.getOrderItemId());
+        dto.setOrder(null);
 
-        dto.setOrder(toDto(entity.getOrderId()));
-        dto.setProduct(toDto(entity.getProductId()));
+        Product product = entity.getProductId();
+        if (product != null) {
+            DtoProduct dtoProduct = new DtoProduct();
+            dtoProduct.setProductId(product.getProductId());
+            dtoProduct.setProductName(product.getProductName());
+            dtoProduct.setInventory(product.getInventory());
+            dtoProduct.setPrice(product.getPrice());
 
+            dtoProduct.setCategory(DtoMapper.toDto(product.getProductCategory()));
+            dto.setProduct(dtoProduct);
+        }
+        dto.setQuantity(entity.getQuantity());
+        dto.setPrice(entity.getPrice());
         return dto;
     }
 
@@ -111,7 +150,8 @@ public class DtoMapper {
         // fields that can not be copied
         entity.setOrderId(toEntity(dto.getOrder()));
         entity.setProductId(toEntity(dto.getProduct()));
-
+        entity.setQuantity(dto.getQuantity());
+        entity.setPrice(dto.getPrice());
         return entity;
     }
 

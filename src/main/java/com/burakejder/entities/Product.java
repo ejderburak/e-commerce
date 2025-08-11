@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -30,4 +31,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Category productCategory;
+
+    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 }

@@ -37,4 +37,7 @@ public class Order {
     @Column(name = "status")
     private String status;
 
+    @OneToMany(mappedBy = "orderId", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
+
 }
