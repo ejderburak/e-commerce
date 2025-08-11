@@ -3,9 +3,12 @@ package com.burakejder.service;
 import com.burakejder.DTO.DtoOrder;
 import com.burakejder.DTO.DtoOrderStatusUpdate;
 import com.burakejder.entities.Order;
+import com.burakejder.entities.OrderItem;
+import com.burakejder.entities.Product;
 import com.burakejder.entities.User;
 import com.burakejder.mapper.DtoMapper;
 import com.burakejder.repository.OrderRepository;
+import com.burakejder.repository.ProductRepository;
 import com.burakejder.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +26,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
 
     // creates new order
@@ -33,6 +37,15 @@ public class OrderService {
 
         User dbUser = optional.get();
         Order order = DtoMapper.toEntity(dtoOrder);
+
+        for (OrderItem orderItem : order.getOrderItems()) {
+            Long productId = orderItem.getProduct().getProductId(); // or getProductId() depending on your field name
+            Optional<Product> productOptional = productRepository.findById(productId);
+            if (productOptional.isPresent()) {
+                orderItem.setProduct(productOptional.get()); // or setProductId() depending on your field name
+                orderItem.setOrder(order); // Set the order reference
+            }
+        }
 
         order.setUser(dbUser);
         Order savedOrder = orderRepository.save(order);

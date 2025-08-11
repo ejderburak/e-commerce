@@ -70,44 +70,23 @@ public class DtoMapper {
     }
 
     // order -> dtoOrder
+    public static DtoOrder toDto(Order entity){
+        if(entity == null){ return null; }
 
-    public static DtoOrder toDto(Order entity) {
-        if (entity == null) return null;
         DtoOrder dto = new DtoOrder();
-        dto.setOrderId(entity.getOrderId());
-        dto.setOrderDate(entity.getOrderDate());
-        dto.setTotalPrice(entity.getTotalPrice());
-        dto.setQuantity(entity.getQuantity());
-        dto.setStatus(entity.getStatus());
+        BeanUtils.copyProperties(entity, dto);
         dto.setUser(toDto(entity.getUser()));
 
-        // Map items
-        if (entity.getOrderItems() != null) {
+        // mapping orderitem
+        if(entity.getOrderItems() != null){
             List<DtoOrderItem> items = new ArrayList<>();
-            for (OrderItem item : entity.getOrderItems()) {
-                items.add(toDto(item)); // <-- uses above mapping
+            for(OrderItem item : entity.getOrderItems()){
+                items.add(toDto(item));
             }
             dto.setOrderItems(items);
         }
         return dto;
     }
-//    public static DtoOrder toDto(Order entity){
-//        if(entity == null){ return null; }
-//
-//        DtoOrder dto = new DtoOrder();
-//        BeanUtils.copyProperties(entity, dto);
-//        dto.setUser(toDto(entity.getUser()));
-//
-//        // mapping orderitem
-//        if(entity.getOrderItems() != null){
-//            List<DtoOrderItem> items = new ArrayList<>();
-//            for(OrderItem item : entity.getOrderItems()){
-//                items.add(toDto(item));
-//            }
-//            dto.setOrderItems(items);
-//        }
-//        return dto;
-//    }
 
     // dtoOrder -> order
     public static Order toEntity(DtoOrder dto){
@@ -121,7 +100,7 @@ public class DtoMapper {
             List<OrderItem> items = new ArrayList<>();
             for(DtoOrderItem item : dto.getOrderItems()){
                 OrderItem orderEntity  = toEntity(item);
-                orderEntity.setOrderId(entity);
+                orderEntity.setOrder(entity);
                 items.add(orderEntity);
             }
             entity.setOrderItems(items);
@@ -140,56 +119,37 @@ public class DtoMapper {
 //        return dto;
 //    }
     public static DtoOrderItem toDto(OrderItem entity) {
+
         if (entity == null) return null;
         DtoOrderItem dto = new DtoOrderItem();
         dto.setOrderItemId(entity.getOrderItemId());
-        dto.setOrder(null); // Avoid infinite recursion!
+        dto.setOrder(null);
 
-        // Fix: Map product fully
-        Product product = entity.getProductId();
+        Product product = entity.getProduct();
         if (product != null) {
             DtoProduct dtoProduct = new DtoProduct();
             dtoProduct.setProductId(product.getProductId());
             dtoProduct.setProductName(product.getProductName());
             dtoProduct.setInventory(product.getInventory());
             dtoProduct.setPrice(product.getPrice());
-            // Map category
-            if (product.getProductCategory() != null) {
-                DtoCategory dtoCategory = new DtoCategory();
-                dtoCategory.setCategoryId(product.getProductCategory().getCategoryId());
-                dtoCategory.setCategoryName(product.getProductCategory().getCategoryName());
-                dtoProduct.setCategory(dtoCategory);
-            }
+
+            dtoProduct.setCategory(DtoMapper.toDto(product.getProductCategory()));
             dto.setProduct(dtoProduct);
         }
         dto.setQuantity(entity.getQuantity());
         dto.setPrice(entity.getPrice());
         return dto;
     }
-//    public static OrderItem toEntity(DtoOrderItem dto){
-//        if (dto == null){ return null; }
-//        OrderItem entity = new OrderItem();
-//
-//        BeanUtils.copyProperties(dto, entity);
-//
-//        // fields that can not be copied
-//        entity.setOrderId(toEntity(dto.getOrder()));
-//        entity.setProductId(toEntity(dto.getProduct()));
-//        entity.setQuantity(dto.getQuantity());
-//        entity.setPrice(dto.getPrice());
-//        return entity;
-//    }
 
-    public static OrderItem toEntity(DtoOrderItem dto) {
-        if (dto == null) return null;
+    public static OrderItem toEntity(DtoOrderItem dto){
+        if (dto == null){ return null; }
         OrderItem entity = new OrderItem();
-        entity.setOrderItemId(dto.getOrderItemId());
-        // Set only productId so JPA links it properly
-        if (dto.getProduct() != null) {
-            Product product = new Product();
-            product.setProductId(dto.getProduct().getProductId());
-            entity.setProductId(product);
-        }
+
+        BeanUtils.copyProperties(dto, entity);
+
+        // fields that can not be copied
+        entity.setOrder(toEntity(dto.getOrder()));
+        entity.setProduct(toEntity(dto.getProduct()));
         entity.setQuantity(dto.getQuantity());
         entity.setPrice(dto.getPrice());
         return entity;

@@ -32,6 +32,6 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "category_id")
     private Category productCategory;
 
-    @OneToMany(mappedBy = "productId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 }
