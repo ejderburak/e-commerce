@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 @Data
 @AllArgsConstructor
 @Service
@@ -28,8 +27,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
 
-
-    // creates new order
+    // Creates new order with its relations
     public DtoOrder createOrder(DtoOrder dtoOrder) {
 
         Long UserId = dtoOrder.getUser().getUserId();
@@ -39,11 +37,11 @@ public class OrderService {
         Order order = DtoMapper.toEntity(dtoOrder);
 
         for (OrderItem orderItem : order.getOrderItems()) {
-            Long productId = orderItem.getProduct().getProductId(); // or getProductId() depending on your field name
+            Long productId = orderItem.getProduct().getProductId();
             Optional<Product> productOptional = productRepository.findById(productId);
             if (productOptional.isPresent()) {
-                orderItem.setProduct(productOptional.get()); // or setProductId() depending on your field name
-                orderItem.setOrder(order); // Set the order reference
+                orderItem.setProduct(productOptional.get());
+                orderItem.setOrder(order);
             }
         }
 
@@ -56,7 +54,7 @@ public class OrderService {
     // getting the order of a specific id
     public DtoOrder getOrderById(Long id){
         Optional<Order> optional = orderRepository.findById(id);
-        if (optional.isEmpty()){return null;}
+        if (optional.isEmpty()) return null;
 
         return DtoMapper.toDto(optional.get());
     }
@@ -80,7 +78,7 @@ public class OrderService {
         Optional<Order> optional = orderRepository.findById(id);
         if(optional.isEmpty()){return null;}
 
-        // chaning the order
+        // changing the order status
         Order order = optional.get();
         order.setStatus(statusUpdate.getStatus());
 
@@ -96,8 +94,4 @@ public class OrderService {
         orderRepository.deleteById(id);
         return true;
     }
-
-
-
-
 }

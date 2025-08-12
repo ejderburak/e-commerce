@@ -155,4 +155,44 @@ public class DtoMapper {
         return entity;
     }
 
+    // user register mapping
+    public static User toEntity(DtoUserRegister dto){
+        if(dto == null){ return null; }
+
+        User entity = new User();
+        BeanUtils.copyProperties(dto, entity);
+        return entity;
+    }
+
+    // dto -> entity for user
+    public static DtoUserProfile toProfileDto(User entity){
+        if(entity == null){ return null; }
+
+        DtoUserProfile dto = new DtoUserProfile();
+        BeanUtils.copyProperties(entity, dto);
+        return dto;
+    }
+
+    // update user profile
+    public static void updateUserFromDto(User user, DtoUserProfileUpdate dto){
+
+        if(dto == null || user == null) return;
+
+        if(dto.getFirstName() != null){
+            user.setFirstName(dto.getFirstName());
+        }
+        if (dto.getLastName() != null) {
+            user.setLastName(dto.getLastName());
+        }
+        if (dto.getBirthDate() != null) {
+            user.setBirthDate(dto.getBirthDate());
+        }
+        if (dto.getAddress() != null) {
+            user.setAddress(dto.getAddress());
+        }
+        if (dto.getPhoneNumber() != null) {
+            user.setPhoneNumber(dto.getPhoneNumber());
+        }
+    }
+
 }
