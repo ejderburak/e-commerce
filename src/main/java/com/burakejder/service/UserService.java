@@ -19,54 +19,44 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // register new user
+    // registering new user
     public DtoAuthResponse register(DtoUserRegister registerDto) {
-        try {
-            // check if email already exists
-            if (userRepository.findByEmail(registerDto.getEmail()).isPresent()) {
-                return new DtoAuthResponse("Email already exists", false);
-            }
 
-            // check if phone number already exists
-            if (userRepository.findByPhoneNumber(registerDto.getPhoneNumber()).isPresent()) {
-                return new DtoAuthResponse("Phone number already exists", false);
-            }
-
-            // create new user
-            User user = DtoMapper.toEntity(registerDto);
-            user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-
-            User savedUser = userRepository.save(user);
-            DtoUserProfile profileDto = DtoMapper.toProfileDto(savedUser);
-
-            return new DtoAuthResponse("User registered successfully", true, profileDto);
-
-        } catch (Exception e) {
-            return new DtoAuthResponse("Registration failed: " + e.getMessage(), false);
+        if(userRepository.findByEmail(registerDto.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
         }
+
+        if(userRepository.findByPhoneNumber(registerDto.getPhoneNumber()).isPresent()) {
+            throw new IllegalArgumentException("Phone number already exists");
+        }
+        // create new user
+        User user = DtoMapper.toEntity(registerDto);
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+
+        User savedUser = userRepository.save(user);
+        DtoUserProfile profileDto = DtoMapper.toProfileDto(savedUser);
+
+        return new DtoAuthResponse("User registered successfully", true, profileDto);
     }
+
+
 
     // login
     public DtoAuthResponse login(DtoUserLogin loginDto) {
-        try {
-            Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
 
-            if (userOptional.isEmpty()) {
-                return new DtoAuthResponse("User not found", false);
-            }
-
-            User user = userOptional.get();
-
-            if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-                return new DtoAuthResponse("Invalid password", false);
-            }
-
-            DtoUserProfile profileDto = DtoMapper.toProfileDto(user);
-            return new DtoAuthResponse("Login successful", true, profileDto);
-
-        } catch (Exception e) {
-            return new DtoAuthResponse("Login failed: " + e.getMessage(), false);
+        Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
+        if(userOptional.isEmpty()) {
+            throw new IllegalArgumentException("Invalid email");
         }
+
+        User user = userOptional.get();
+        if(!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Invalid password");
+        }
+
+        DtoUserProfile profileDto = DtoMapper.toProfileDto(user);
+
+        return new DtoAuthResponse("Logged in successfully",true  ,profileDto);
     }
 
     // get user profile
@@ -74,7 +64,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isEmpty()) {
-            return null;
+           throw new IllegalArgumentException("User not found");
         }
 
         return DtoMapper.toProfileDto(userOptional.get());
@@ -85,7 +75,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("User not found");
         }
 
         User user = userOptional.get();
@@ -100,7 +90,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isEmpty()) {
-            return null;
+            throw new IllegalArgumentException("User not found");
         }
 
         User user = userOptional.get();
