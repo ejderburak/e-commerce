@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long>{
 
-    // Find user by email for login
+    // find user by email
     Optional<User> findByEmail(String email);
 
-    // Find user for phone number validation
+    // find user by phone number
     Optional<User> findByPhoneNumber(String phoneNumber);
 
-    // Email db check
+    // email db check
     boolean existsByEmail(String email);
 
     // phoneNumber db check

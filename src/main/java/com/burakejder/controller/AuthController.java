@@ -17,7 +17,7 @@ public class AuthController {
 
     private final UserService userService;
 
-    // POST /api/v1/auth/register - User registration
+    // POST -- /api/v1/auth/register -- user registration
     @PostMapping("/register")
     public ResponseEntity<DtoAuthResponse> register(@Valid @RequestBody DtoUserRegister registerDto) {
         DtoAuthResponse response = userService.register(registerDto);
@@ -29,7 +29,7 @@ public class AuthController {
         }
     }
 
-    // POST /api/v1/auth/login - User login
+    // POST -- /api/v1/auth/login -- login
     @PostMapping("/login")
     public ResponseEntity<DtoAuthResponse> login(@Valid @RequestBody DtoUserLogin loginDto) {
         DtoAuthResponse response = userService.login(loginDto);

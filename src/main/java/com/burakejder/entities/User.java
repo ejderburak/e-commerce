@@ -13,6 +13,10 @@ import java.util.Date;
 @Entity
 public class User {
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role = Role.USER;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -20,24 +24,26 @@ public class User {
     @Column(name = "first_name", nullable = false, length = 15)
     private String firstName;
 
-    @Column(name = "last_name", nullable =false, length = 15)
+    @Column(name = "last_name", nullable = false, length = 15)
     private String lastName;
 
     @Column(name = "date_of_birth", nullable = true)
     private Date birthDate;
 
-    @Column(name = "email",unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "address")
     private String address;
 
-    @Column(name = "phone_number",unique = true, nullable = false)
+    @Column(name = "phone_number", unique = true, nullable = false)
     private String phoneNumber;
 
 
     @Column(name = "password", nullable = false)
     private String password;
+}
 
-    // çift taraflı
+enum Role{
+    USER, ADMIN
 }

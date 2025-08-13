@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
-    // GET /api/v1/users/profile - Get user profile
+    // GET --/api/v1/users/profile - get user profile
     @GetMapping("/profile")
     public ResponseEntity<DtoUserProfile> getProfile(@RequestParam Long userId) {
         DtoUserProfile profile = userService.getUserProfile(userId);
@@ -30,7 +30,7 @@ public class UserController {
         }
     }
 
-    // PUT /api/v1/users/profile - Update profile
+    // PUT --  /api/v1/users/profile - update profile
     @PutMapping("/profile")
     public ResponseEntity<DtoUserProfile> updateProfile(
             @RequestParam Long userId,
@@ -45,7 +45,7 @@ public class UserController {
         }
     }
 
-    // POST /api/v1/users/address - Add address
+    // POST -- /api/v1/users/address -- add address
     @PostMapping("/address")
     public ResponseEntity<DtoUserProfile> addAddress(
             @RequestParam Long userId,

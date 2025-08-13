@@ -19,20 +19,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // Register new user
+    // register new user
     public DtoAuthResponse register(DtoUserRegister registerDto) {
         try {
-            // Check if email already exists
+            // check if email already exists
             if (userRepository.findByEmail(registerDto.getEmail()).isPresent()) {
                 return new DtoAuthResponse("Email already exists", false);
             }
 
-            // Check if phone number already exists
+            // check if phone number already exists
             if (userRepository.findByPhoneNumber(registerDto.getPhoneNumber()).isPresent()) {
                 return new DtoAuthResponse("Phone number already exists", false);
             }
 
-            // Create new user
+            // create new user
             User user = DtoMapper.toEntity(registerDto);
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
@@ -46,7 +46,7 @@ public class UserService {
         }
     }
 
-    // Login user
+    // login
     public DtoAuthResponse login(DtoUserLogin loginDto) {
         try {
             Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
@@ -69,7 +69,7 @@ public class UserService {
         }
     }
 
-    // Get user profile
+    // get user profile
     public DtoUserProfile getUserProfile(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -80,7 +80,7 @@ public class UserService {
         return DtoMapper.toProfileDto(userOptional.get());
     }
 
-    // Update user profile
+    // update user profile
     public DtoUserProfile updateProfile(Long userId, DtoUserProfileUpdate updateDto) {
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -95,7 +95,7 @@ public class UserService {
         return DtoMapper.toProfileDto(updatedUser);
     }
 
-    // Add/Update address
+    // updating address
     public DtoUserProfile updateAddress(Long userId, DtoUserAddress addressDto) {
         Optional<User> userOptional = userRepository.findById(userId);
 
@@ -110,4 +110,3 @@ public class UserService {
         return DtoMapper.toProfileDto(updatedUser);
     }
 }
-
