@@ -54,7 +54,9 @@ public class OrderService {
     // getting the order of a specific id
     public DtoOrder getOrderById(Long id){
         Optional<Order> optional = orderRepository.findById(id);
-        if (optional.isEmpty()) return null;
+        if (optional.isEmpty()){
+            throw new IllegalArgumentException("Order not found");
+        }
 
         return DtoMapper.toDto(optional.get());
     }
