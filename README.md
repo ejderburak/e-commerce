@@ -54,7 +54,7 @@ Tech Stack
 
 ### Installation
 
-1. Clone the repository:**
+1. Clone the repository:
    ```bash
    git clone https://github.com/ejderburak/e-commerce.git
    cd e-commerce
