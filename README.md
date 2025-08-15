@@ -78,8 +78,6 @@ Some core endpoints (see Swagger UI for full list):
 - `POST /api/cart` - Add item to cart
 - `POST /api/orders` - Place an order
 
-> For full API specification, use Swagger UI or refer to the controller classes.
-
 Project Structure
 
 ```
